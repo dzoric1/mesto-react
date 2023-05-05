@@ -14,7 +14,7 @@ function Card({ card, onCardClick }) {
         <h2 className="card__title">{card ? card.name : 'Без названия'}</h2>
         <div className="card__like-field">
           <button className="card__like" type="button" aria-label="Лайк"></button>
-          <span className="card__like-count">{card.likes.length}</span>
+          <span className="card__like-count">{card ? card.likes.length : 0}</span>
         </div>
       </div>
       <button className="card__delete" type="button" aria-label="Удалить"></button>
