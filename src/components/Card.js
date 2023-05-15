@@ -1,6 +1,12 @@
+import { useContext } from 'react';
+import CurrentUserContext from '../contexts/CurrentUserContext';
 import notFound from '../assets/images/not-found.jpg'
 
-function Card({ card, onCardClick }) {
+function Card({ card, onCardClick, onCardLike }) {
+
+  const currentUser = useContext(CurrentUserContext)
+  const isOwner = card.owner._id === currentUser._id
+  const isLiked = card.likes.some(i => i._id === currentUser._id)
 
   return (
     <li className="gallery__card card">
@@ -13,11 +19,16 @@ function Card({ card, onCardClick }) {
       <div className="card__heading">
         <h2 className="card__title">{card ? card.name : 'Без названия'}</h2>
         <div className="card__like-field">
-          <button className="card__like" type="button" aria-label="Лайк"></button>
+          <button
+            className={`card__like ${isLiked && "card__like_active"}`}
+            type="button"
+            aria-label="Лайк"
+            onClick={() => onCardLike(card)}
+          ></button>
           <span className="card__like-count">{card ? card.likes.length : 0}</span>
         </div>
       </div>
-      <button className="card__delete" type="button" aria-label="Удалить"></button>
+      {isOwner && <button className="card__delete" type="button" aria-label="Удалить"></button>}
     </li>
   )
 }
