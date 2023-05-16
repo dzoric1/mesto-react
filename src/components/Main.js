@@ -31,7 +31,7 @@ function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike,
       </section>
       <section className="content__gallery gallery">
         <ul className="gallery__cards">
-          {cards.map(card => (
+          {cards?.map(card => (
             <Card
               key={card._id}
               card={card}
