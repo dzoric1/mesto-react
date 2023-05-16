@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import notFound from '../assets/images/not-found.jpg'
 
-function Card({ card, onCardClick, onCardLike }) {
+function Card({ card, onCardClick, onCardLike, onCardDelete }) {
 
   const currentUser = useContext(CurrentUserContext)
   const isOwner = card.owner._id === currentUser._id
@@ -23,12 +23,12 @@ function Card({ card, onCardClick, onCardLike }) {
             className={`card__like ${isLiked && "card__like_active"}`}
             type="button"
             aria-label="Лайк"
-            onClick={() => onCardLike(card)}
+            onClick={() => onCardLike(card, isLiked)}
           ></button>
           <span className="card__like-count">{card ? card.likes.length : 0}</span>
         </div>
       </div>
-      {isOwner && <button className="card__delete" type="button" aria-label="Удалить"></button>}
+      {isOwner && <button className="card__delete" type="button" aria-label="Удалить" onClick={() => onCardDelete(card._id)}></button>}
     </li>
   )
 }

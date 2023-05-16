@@ -55,9 +55,7 @@ function App() {
     setSelectedCard(card)
   }
 
-  function handleLikeClick(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id)
-
+  function handleLikeClick(card, isLiked) {
     if (isLiked) {
       api.toggleLike(card._id, 'DELETE')
         .then(newCard => {
@@ -73,6 +71,13 @@ function App() {
     }
   }
 
+  function handleCardDelete(id) {
+    api.deleteCard(id)
+      .then(() => {
+        setCards(cards.filter(card => card._id !== id))
+      })
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
 
@@ -84,6 +89,7 @@ function App() {
           onAvatarEdit={handleAvatarClick}
           onCardClick={handleCardClick}
           onCardLike={handleLikeClick}
+          onCardDelete={handleCardDelete}
           cards={cards}
         />
         <Footer />
