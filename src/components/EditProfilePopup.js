@@ -23,6 +23,14 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
     setDescription(currentUser.about);
   }, [currentUser]);
 
+  function handleChangeName(e) {
+    setName(e.target.value)
+  }
+
+  function handleChangeDescription(e) {
+    setDescription(e.target.value)
+  }
+
   return (
     <PopupWithForm
       name={'edit'}
@@ -39,8 +47,8 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
           name="name"
           required maxLength="40"
           minLength="2"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={name || 'Данных нет!'}
+          onChange={handleChangeName}
         />
         <span className="popup__input-error name-error"></span>
       </label>
@@ -51,8 +59,8 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
           name="about"
           required maxLength="200"
           minLength="2"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={description || 'Данных нет!'}
+          onChange={handleChangeDescription}
         />
         <span className="popup__input-error about-error"></span>
       </label>
