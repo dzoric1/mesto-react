@@ -6,6 +6,7 @@ import Main from './Main';
 import Footer from './Footer';
 import PopupWithForm from './PopupWithForm';
 import ImagePopup from './ImagePopup';
+import EditProfilePopup from './EditProfilePopup';
 
 function App() {
 
@@ -78,6 +79,11 @@ function App() {
       })
   }
 
+  function handleUpdateUser(userData) {
+    api.patchUserInfo(userData)
+      .then(newUserData => setCurrentUser(newUserData))
+  }
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
 
@@ -94,24 +100,7 @@ function App() {
         />
         <Footer />
 
-        <PopupWithForm
-          name={'edit'}
-          title={'Редактировать профиль'}
-          isOpen={isProfileEditPopupOpen}
-          onClose={closeAllPopups}
-          buttonTitle={'Сохранить'}
-        >
-          <label className="popup__fieldset">
-            <input className="popup__form-input popup__form-input_type_name" type="text" placeholder="Имя" name="name"
-              required maxLength="40" minLength="2" />
-            <span className="popup__input-error name-error"></span>
-          </label>
-          <label className="popup__fieldset">
-            <input className="popup__form-input popup__form-input_type_job" type="text" placeholder="Деятельность"
-              name="about" required maxLength="200" minLength="2" />
-            <span className="popup__input-error about-error"></span>
-          </label>
-        </PopupWithForm>
+        <EditProfilePopup isOpen={isProfileEditPopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
 
         <PopupWithForm
           name={'add'}
@@ -156,4 +145,4 @@ function App() {
   );
 }
 
-export default App;
+export default App
