@@ -2,7 +2,9 @@ import { useContext } from 'react';
 import Card from './Card';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 
-function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike, cards, onCardDelete }) {
+import loading from '../assets/images/loading.svg'
+
+function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike, cards, onCardDelete, isLoading }) {
 
   const { name, about, avatar } = useContext(CurrentUserContext)
 
@@ -10,10 +12,10 @@ function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike,
     <main className="content">
       <section className="content__profile profile">
         <div className="profile__avatar-wrapper" onClick={onAvatarEdit}>
-          <img className="profile__avatar" src={avatar} alt="Аватар" />
+          <img className="profile__avatar" src={isLoading ? loading : avatar} alt="Аватар" />
         </div>
         <div className="profile__info">
-          <h1 className="profile__name">{name}</h1>
+          <h1 className="profile__name">{isLoading ? 'Загрузка...' : name}</h1>
           <button
             className="profile__edit-button"
             type="button"

@@ -22,6 +22,8 @@ function App() {
   const [addButtonText, setAddButtonText] = useState('Создать')
   const [avatarButtonText, setAvatarButtonText] = useState('Сохранить')
 
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
     Promise.all([
       api.getUserInfo(),
@@ -32,6 +34,7 @@ function App() {
         setCurrentUser(userData)
       })
       .catch(err => console.warn(err))
+      .finally(() => setIsLoading(false))
   }, [])
 
   function handleProfileEditClick() {
@@ -78,6 +81,7 @@ function App() {
       .then(() => {
         setCards(cards.filter(card => card._id !== id))
       })
+      .catch(err => console.warn(err))
   }
 
   function handleUpdateUser(userData) {
@@ -89,7 +93,6 @@ function App() {
       })
       .catch(err => console.warn(err))
       .finally(() => setEditButtonText('Сохранить'))
-
   }
 
   function handleUpdateAvatar(avatar) {
@@ -128,6 +131,8 @@ function App() {
           onCardLike={handleLikeClick}
           onCardDelete={handleCardDelete}
           cards={cards}
+
+          isLoading={isLoading}
         />
         <Footer />
 
