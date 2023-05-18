@@ -1,35 +1,25 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import PopupWithForm from './PopupWithForm';
 import CurrentUserContext from '../contexts/CurrentUserContext';
+import useValidationForm from '../utils/useValidationForm';
 
-const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
+const EditProfilePopup = ({ isOpen, onClose, onUpdateUser, buttonText }) => {
 
-  const [name, setName] = useState('')
-  const [description, setDescription] = useState('')
+  const { inputValues, errors, isValid, handleChange, setInputValues, resetForm } = useValidationForm()
 
   const currentUser = useContext(CurrentUserContext)
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    onUpdateUser({
-      name,
-      about: description,
-    });
+    onUpdateUser(inputValues)
   }
 
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
-  }, [currentUser]);
-
-  function handleChangeName(e) {
-    setName(e.target.value)
-  }
-
-  function handleChangeDescription(e) {
-    setDescription(e.target.value)
-  }
+    setInputValues({
+      name: currentUser.name,
+      about: currentUser.about
+    })
+  }, [isOpen]);
 
   return (
     <PopupWithForm
@@ -37,8 +27,10 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
       title={'Редактировать профиль'}
       isOpen={isOpen}
       onClose={onClose}
-      buttonTitle={'Сохранить'}
+      buttonTitle={buttonText}
       onSubmit={handleSubmit}
+      isValid={isValid}
+      resetForm={resetForm}
     >
       <label className="popup__fieldset">
         <input
@@ -47,10 +39,10 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
           name="name"
           required maxLength="40"
           minLength="2"
-          value={name || 'Данных нет!'}
-          onChange={handleChangeName}
+          value={inputValues.name || ''}
+          onChange={handleChange}
         />
-        <span className="popup__input-error name-error"></span>
+        <span className="popup__input-error name-error">{errors.name}</span>
       </label>
       <label className="popup__fieldset">
         <input className="popup__form-input popup__form-input_type_job"
@@ -59,10 +51,10 @@ const EditProfilePopup = ({ isOpen, onClose, onUpdateUser }) => {
           name="about"
           required maxLength="200"
           minLength="2"
-          value={description || 'Данных нет!'}
-          onChange={handleChangeDescription}
+          value={inputValues.about || ''}
+          onChange={handleChange}
         />
-        <span className="popup__input-error about-error"></span>
+        <span className="popup__input-error about-error">{errors.about}</span>
       </label>
     </PopupWithForm>
   )

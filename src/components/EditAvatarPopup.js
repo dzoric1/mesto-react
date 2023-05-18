@@ -1,17 +1,14 @@
-import { useRef } from "react";
+import useValidationForm from "../utils/useValidationForm";
 import PopupWithForm from "./PopupWithForm"
 
-const EditAvatarProfilePopup = ({ isOpen, onClose, onUpdateAvatar }) => {
+const EditAvatarProfilePopup = ({ isOpen, onClose, onUpdateAvatar, buttonText }) => {
 
-  const avatarRef = useRef(null)
+  const { inputValues, errors, isValid, handleChange, resetForm } = useValidationForm()
 
 
   function handleSubmit(e) {
     e.preventDefault();
-
-    onUpdateAvatar({
-      avatar: avatarRef.current.value
-    });
+    onUpdateAvatar(inputValues);
   }
 
 
@@ -21,8 +18,10 @@ const EditAvatarProfilePopup = ({ isOpen, onClose, onUpdateAvatar }) => {
       title={'Обновить аватар'}
       isOpen={isOpen}
       onClose={onClose}
-      buttonTitle={'Сохранить'}
+      buttonTitle={buttonText}
       onSubmit={handleSubmit}
+      isValid={isValid}
+      resetForm={resetForm}
     >
       <label className="popup__fieldset">
         <input
@@ -31,10 +30,10 @@ const EditAvatarProfilePopup = ({ isOpen, onClose, onUpdateAvatar }) => {
           placeholder="Ссылка на аватар"
           name="avatar"
           required
-          // value={avatarRef.current.value || ''}
-          ref={avatarRef}
+          value={inputValues.avatar || ''}
+          onChange={handleChange}
         />
-        <span className="popup__input-error avatar-error"></span>
+        <span className="popup__input-error avatar-error">{errors.avatar}</span>
       </label>
     </PopupWithForm>
   )

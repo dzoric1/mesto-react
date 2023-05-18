@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, } from 'react';
 import api from '../utils/Api';
 import CurrentUserContext from '../contexts/CurrentUserContext';
 import Header from './Header';
@@ -17,6 +17,10 @@ function App() {
   const [isAvatarEditPopupOpen, setIisAvatarEditPopupOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState({ name: '', link: '' })
   const [currentUser, setCurrentUser] = useState({})
+
+  const [editButtonText, setEditButtonText] = useState('Сохранить')
+  const [addButtonText, setAddButtonText] = useState('Создать')
+  const [avatarButtonText, setAvatarButtonText] = useState('Сохранить')
 
   useEffect(() => {
     Promise.all([
@@ -77,34 +81,41 @@ function App() {
   }
 
   function handleUpdateUser(userData) {
+    setEditButtonText('Сохранение...')
     api.patchUserInfo(userData)
       .then(newUserData => {
         setCurrentUser(newUserData)
         closeAllPopups()
       })
       .catch(err => console.warn(err))
+      .finally(() => setEditButtonText('Сохранить'))
 
   }
 
   function handleUpdateAvatar(avatar) {
+    setAvatarButtonText('Сохранение...')
     api.updateAvatar(avatar)
       .then(newUserData => {
         setCurrentUser(newUserData)
         closeAllPopups()
       })
       .catch(err => console.warn(err))
+      .finally(() => setAvatarButtonText('Сохранить'))
   }
 
   function handleAddCardSubmit(card) {
+    setAddButtonText('Создание...')
     api.addCard(card)
       .then(newCard => {
         setCards([newCard, ...cards])
         closeAllPopups()
       })
       .catch(err => console.warn(err))
+      .finally(() => setAddButtonText('Создать'))
   }
 
   return (
+
     <CurrentUserContext.Provider value={currentUser}>
 
       <div className="page">
@@ -120,11 +131,26 @@ function App() {
         />
         <Footer />
 
-        <EditProfilePopup isOpen={isProfileEditPopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser} />
+        <EditProfilePopup
+          isOpen={isProfileEditPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateUser={handleUpdateUser}
+          buttonText={editButtonText}
+        />
 
-        <AddCardPopup isOpen={isAddCardPopupOpen} onClose={closeAllPopups} onAddCard={handleAddCardSubmit} />
+        <AddCardPopup
+          isOpen={isAddCardPopupOpen}
+          onClose={closeAllPopups}
+          onAddCard={handleAddCardSubmit}
+          buttonText={addButtonText}
+        />
 
-        <EditAvatarProfilePopup isOpen={isAvatarEditPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar} />
+        <EditAvatarProfilePopup
+          isOpen={isAvatarEditPopupOpen}
+          onClose={closeAllPopups}
+          onUpdateAvatar={handleUpdateAvatar}
+          buttonText={avatarButtonText}
+        />
 
         <ImagePopup
           card={selectedCard}
@@ -133,6 +159,7 @@ function App() {
       </div>
 
     </CurrentUserContext.Provider>
+
   );
 }
 

@@ -1,18 +1,14 @@
-import { useState } from "react"
 import PopupWithForm from "./PopupWithForm"
+import useValidationForm from "../utils/useValidationForm"
 
-const AddCardPopup = ({ isOpen, onClose, onAddCard }) => {
+const AddCardPopup = ({ isOpen, onClose, onAddCard, buttonText }) => {
 
-  const [name, setName] = useState('')
-  const [link, setLink] = useState('')
+  const { inputValues, errors, isValid, handleChange, resetForm } = useValidationForm()
+
 
   function handleSubmit(e) {
-    e.preventDefault();
-
-    onAddCard({
-      name,
-      link
-    });
+    e.preventDefault()
+    onAddCard(inputValues)
   }
 
   return (
@@ -21,8 +17,10 @@ const AddCardPopup = ({ isOpen, onClose, onAddCard }) => {
       title={'Новое место'}
       isOpen={isOpen}
       onClose={onClose}
-      buttonTitle={'Создать'}
+      buttonTitle={buttonText}
       onSubmit={handleSubmit}
+      isValid={isValid}
+      resetForm={resetForm}
     >
       <label className="popup__fieldset">
         <input
@@ -33,9 +31,9 @@ const AddCardPopup = ({ isOpen, onClose, onAddCard }) => {
           required
           maxLength="30"
           minLength="2"
-          value={name || ''}
-          onChange={(e) => setName(e.target.value)} />
-        <span className="popup__input-error name-error"></span>
+          value={inputValues.name || ''}
+          onChange={handleChange} />
+        <span className="popup__input-error name-error">{errors.name || ''}</span>
       </label>
       <label className="popup__fieldset">
         <input className="popup__form-input popup__form-input_type_url"
@@ -43,10 +41,10 @@ const AddCardPopup = ({ isOpen, onClose, onAddCard }) => {
           placeholder="Ссылка на картинку"
           name="link"
           required
-          value={link || ''}
-          onChange={(e) => setLink(e.target.value)}
+          value={inputValues.link || ''}
+          onChange={handleChange}
         />
-        <span className="popup__input-error link-error"></span>
+        <span className="popup__input-error link-error">{errors.link || ''}</span>
       </label>
     </PopupWithForm>
   )
