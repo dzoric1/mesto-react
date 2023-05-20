@@ -4,7 +4,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext';
 
 import loading from '../assets/images/loading.svg'
 
-function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike, cards, onCardDelete, isLoading }) {
+function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike, cards, onCardDeleteClick, isLoading }) {
 
   const { name, about, avatar } = useContext(CurrentUserContext)
 
@@ -39,7 +39,7 @@ function Main({ onEditProfile, onAddCard, onAvatarEdit, onCardClick, onCardLike,
               card={card}
               onCardClick={() => onCardClick(card)}
               onCardLike={onCardLike}
-              onCardDelete={onCardDelete}
+              onCardDeleteClick={onCardDeleteClick}
             />
           ))}
         </ul>

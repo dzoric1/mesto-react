@@ -8,6 +8,7 @@ import ImagePopup from './ImagePopup';
 import EditProfilePopup from './EditProfilePopup';
 import EditAvatarProfilePopup from './EditAvatarPopup';
 import AddCardPopup from './AddCardPopup';
+import ConfirmDeletePopup from './ConfirmDeletePopup';
 
 function App() {
 
@@ -15,12 +16,15 @@ function App() {
   const [isProfileEditPopupOpen, setProfileEditPopupOpen] = useState(false)
   const [isAddCardPopupOpen, setisAddCardPopupOpen] = useState(false)
   const [isAvatarEditPopupOpen, setIisAvatarEditPopupOpen] = useState(false)
+  const [isConfirmDeletePopupOpen, setConfirmDeletePopupOpen] = useState(false)
   const [selectedCard, setSelectedCard] = useState({ name: '', link: '' })
+  const [deletedCard, setDeletedCard] = useState({ _id: '' })
   const [currentUser, setCurrentUser] = useState({})
 
   const [editButtonText, setEditButtonText] = useState('Сохранить')
   const [addButtonText, setAddButtonText] = useState('Создать')
   const [avatarButtonText, setAvatarButtonText] = useState('Сохранить')
+  const [confirmButtonText, setConfirmButtonText] = useState('Вы уверены?')
 
   const [isLoading, setIsLoading] = useState(true)
 
@@ -49,10 +53,16 @@ function App() {
     setIisAvatarEditPopupOpen(true)
   }
 
+  function handleDeleteCardClick(id) {
+    setConfirmDeletePopupOpen(true)
+    setDeletedCard(id)
+  }
+
   function closeAllPopups() {
     setIisAvatarEditPopupOpen(false)
     setisAddCardPopupOpen(false)
     setProfileEditPopupOpen(false)
+    setConfirmDeletePopupOpen(false)
     setSelectedCard({ name: '', link: '' })
   }
 
@@ -77,11 +87,14 @@ function App() {
   }
 
   function handleCardDelete(id) {
+    setConfirmButtonText('Удаление...')
     api.deleteCard(id)
       .then(() => {
         setCards(cards.filter(card => card._id !== id))
+        closeAllPopups()
       })
       .catch(err => console.warn(err))
+      .finally(() => setConfirmButtonText('Вы уверены?'))
   }
 
   function handleUpdateUser(userData) {
@@ -129,9 +142,8 @@ function App() {
           onAvatarEdit={handleAvatarClick}
           onCardClick={handleCardClick}
           onCardLike={handleLikeClick}
-          onCardDelete={handleCardDelete}
+          onCardDeleteClick={handleDeleteCardClick}
           cards={cards}
-
           isLoading={isLoading}
         />
         <Footer />
@@ -160,6 +172,14 @@ function App() {
         <ImagePopup
           card={selectedCard}
           onClose={closeAllPopups}
+        />
+
+        <ConfirmDeletePopup
+          isOpen={isConfirmDeletePopupOpen}
+          onClose={closeAllPopups}
+          onConfirm={handleCardDelete}
+          buttonText={confirmButtonText}
+          deletedCard={deletedCard}
         />
       </div>
 
